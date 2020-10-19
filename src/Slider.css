@@ -1,0 +1,31 @@
+.Slider {
+  height: 5px;
+  background-color: #F6BDB7;
+  position: relative;
+  width: 300px;
+}
+
+.Slider-Track {
+  background-color: #F08981;
+  height: 100%;
+  width: 30%;
+}
+
+.Slider-Mark {
+  background-color: #F6BDB7;
+  height: 12px;
+  position: absolute;
+  width: 4px;
+  bottom: 0;
+  left: 15%;
+}
+
+.Slider-Thumb {
+  background-color: #F08981;
+  border-radius: 100%;
+  bottom: -7px;
+  height: 20px;
+  position: absolute;
+  left: 30%;
+  width: 20px;
+}
