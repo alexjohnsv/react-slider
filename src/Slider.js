@@ -1,5 +1,7 @@
 import React from 'react';
 import './Slider.css';
+import SliderMark from './SliderMark';
+import SliderThumb from './SliderThumb';
 
 class Slider extends React.Component {
   constructor(props) {
@@ -65,6 +67,7 @@ class Slider extends React.Component {
       }
     }, false);
 
+    // @todo
     this.setState({
       maxValue: Math.max(...this.props.marks),
       minValue: Math.min(...this.props.marks),
@@ -81,25 +84,13 @@ class Slider extends React.Component {
     })
   }
 
-  renderMark(mark) {
-    const backgroundColor = mark <= this.state.currentValue ? '#F08981' : '#F6BDB7';
-
-    const style = {
-      left: (mark / this.state.maxValue) * 100 + '%',
-      backgroundColor: backgroundColor,
-    };
-
-    return (
-      <div key={mark.toString()} onClick={() => { this.handleOnMarkClick(mark)}} style={style} className="Slider-Mark"></div>
-    );
-  }
-
   render() {
-    const marks = this.props.marks.map((mark) => this.renderMark(mark));
-
-    const thumbRectition = {
-      left: 'calc(' + (this.state.currentValue / this.state.maxValue) * 100 + '% - 10px)',
-    }
+    const marks = this.props.marks.map((mark) => 
+      <SliderMark value={mark} 
+                  current={this.state.currentValue}
+                  max={this.state.maxValue}
+                  handleClick={this.handleOnMarkClick} />
+    );
 
     const trackPosition = {
       width: (this.state.currentValue / this.state.maxValue) * 100 + '%',
@@ -109,11 +100,11 @@ class Slider extends React.Component {
       <div className="Slider">
         <div className="Slider-Track" style={trackPosition}></div>
         {marks}
-        <div className="Slider-Thumb" ref={this.thumbRef} style={thumbRectition}
-             onPointerDown={(e) => this.handleOnPointerDown(e)}
-        >
-             <div className="Slider-CurrentValue">{this.state.currentValue}</div>
-        </div>
+        <SliderThumb thumbRef={this.thumbRef}
+                     handleOnPointerDown={this.handleOnPointerDown}
+                     current={this.state.currentValue}
+                     max={this.state.maxValue}
+        />
       </div>
     );
   }
