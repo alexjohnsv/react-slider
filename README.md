@@ -1,5 +1,7 @@
 # React Slider
 
+Demo: https://zealous-mayer-9c7179.netlify.app/
+
 This project was built with React and bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
