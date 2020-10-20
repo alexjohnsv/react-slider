@@ -29,10 +29,9 @@ class Slider extends React.Component {
         const diffRight = Math.abs(mouseX - thumbRect.right);
         const diffLeft = Math.abs(mouseX - thumbRect.left);
 
-        // @todo
-        const threshold = 30;
+        const threshold = 5;
 
-        if (diffRight < diffLeft && diffRight > threshold && mouseX > previousMouseX) {
+        if (diffRight < diffLeft && mouseX > thumbRect.right + threshold && mouseX > previousMouseX) {
 
           const currentMarkIndex = marks.indexOf(currentValue);
 
@@ -43,7 +42,7 @@ class Slider extends React.Component {
             });
           }
 
-        } else if (diffLeft < diffRight && diffLeft > threshold && mouseX < previousMouseX) {
+        } else if (diffLeft < diffRight && mouseX < thumbRect.left + threshold && mouseX < previousMouseX) {
 
           const currentMarkIndex = marks.indexOf(currentValue);
 
