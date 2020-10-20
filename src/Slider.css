@@ -1,6 +1,6 @@
 .Slider {
-  height: 5px;
   background-color: #F6BDB7;
+  height: 5px;
   position: relative;
   width: 300px;
 }
@@ -13,11 +13,11 @@
 
 .Slider-Mark {
   background-color: #F6BDB7;
+  bottom: 0;
   height: 12px;
+  left: 15%;
   position: absolute;
   width: 4px;
-  bottom: 0;
-  left: 15%;
 }
 
 .Slider-Thumb {
@@ -25,7 +25,19 @@
   border-radius: 100%;
   bottom: -7px;
   height: 20px;
-  position: absolute;
   left: 30%;
+  position: absolute;
   width: 20px;
+}
+
+.Slider-CurrentValue {
+  bottom: 25px;
+  color: #4A5568;
+  font-size: .8rem;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  right: 0;
+  text-align: center;
 }

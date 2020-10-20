@@ -75,6 +75,12 @@ class Slider extends React.Component {
     this.setState({ isMoving: true, previousMouseX: e.pageX });
   };
 
+  handleOnMarkClick = (mark) => {
+    this.setState({
+      currentValue: mark,
+    })
+  }
+
   renderMark(mark) {
     const backgroundColor = mark <= this.state.currentValue ? '#F08981' : '#F6BDB7';
 
@@ -84,7 +90,7 @@ class Slider extends React.Component {
     };
 
     return (
-      <div key={mark.toString()} style={style} className="Slider-Mark"></div>
+      <div key={mark.toString()} onClick={() => { this.handleOnMarkClick(mark)}} style={style} className="Slider-Mark"></div>
     );
   }
 
@@ -106,6 +112,7 @@ class Slider extends React.Component {
         <div className="Slider-Thumb" ref={this.thumbRef} style={thumbRectition}
              onPointerDown={(e) => this.handleOnPointerDown(e)}
         >
+             <div className="Slider-CurrentValue">{this.state.currentValue}</div>
         </div>
       </div>
     );
