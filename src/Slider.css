@@ -1,5 +1,6 @@
 .Slider {
   background-color: #F6BDB7;
+  cursor: pointer;
   height: 5px;
   position: relative;
   width: 300px;
