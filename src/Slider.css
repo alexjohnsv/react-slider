@@ -3,6 +3,7 @@
   height: 5px;
   position: relative;
   width: 300px;
+  touch-action: none;
 }
 
 .Slider-Track {
