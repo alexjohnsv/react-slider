@@ -42,7 +42,7 @@ class Slider extends React.Component {
             });
           }
 
-        } else if (diffLeft < diffRight && mouseX < thumbRect.left + threshold && mouseX < previousMouseX) {
+        } else if (diffLeft < diffRight && mouseX < thumbRect.left - threshold && mouseX < previousMouseX) {
 
           const currentMarkIndex = marks.indexOf(currentValue);
 
@@ -85,7 +85,8 @@ class Slider extends React.Component {
 
   render() {
     const marks = this.props.marks.map((mark) => 
-      <SliderMark value={mark} 
+      <SliderMark key={mark.toString()}
+                  value={mark}
                   current={this.state.currentValue}
                   max={this.state.maxValue}
                   handleClick={this.handleOnMarkClick} />
