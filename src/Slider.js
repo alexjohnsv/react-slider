@@ -91,9 +91,9 @@ class Slider extends React.Component {
     this.setState({ isMoving: true, previousMouseX: e.pageX });
   };
 
-  handleOnMarkClick = (mark) => {
+  handleOnMarkClick = (index) => {
     this.setState({
-      currentValue: mark,
+      currentIndex: index,
     })
   }
 
@@ -108,6 +108,7 @@ class Slider extends React.Component {
            key={mark.toString()}
            style={style}
            ref={this.marksRef[index]}
+           onClick={() => this.handleOnMarkClick(index)}
       ></div>
     );
   }
