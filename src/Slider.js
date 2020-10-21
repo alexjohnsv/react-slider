@@ -1,16 +1,22 @@
 import React from 'react';
 import './Slider.css';
-import SliderMark from './SliderMark';
 import SliderThumb from './SliderThumb';
 
 class Slider extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       isMoving: false,
-      currentValue: 10,
+      currentValue: 1,
+      currentIndex: 1,
       previousMouseX: 0,
+      marks: [0, 10, 20, 30, 40, 50, 100],
+      maxValue: 100,
+      minValue: 0,
     };
+
+    this.marksRef = this.state.marks.map(() => React.createRef());
 
     this.thumbRef = React.createRef();
   }
@@ -18,43 +24,57 @@ class Slider extends React.Component {
   componentDidMount() {
     const onPointerMove = (e) => {
       if (this.state.isMoving) {
-        const thumbRect = this.thumbRef.current.getBoundingClientRect();
-
         const mouseX = e.pageX;
-        const marks = this.props.marks;
-        const currentValue = this.state.currentValue;
         const previousMouseX = this.state.previousMouseX;
-        
 
-        const diffRight = Math.abs(mouseX - thumbRect.right);
-        const diffLeft = Math.abs(mouseX - thumbRect.left);
+        const currentIndex = this.state.currentIndex;
+        const currentRef = this.marksRef[currentIndex].current;
+        const currentPos = currentRef.getBoundingClientRect();
+      
+        // Left
+        if (mouseX < previousMouseX) {
 
-        const threshold = 5;
+          const previousIndex = currentIndex - 1;
 
-        if (diffRight < diffLeft && mouseX > thumbRect.right + threshold && mouseX > previousMouseX) {
+          const previous = this.state.marks[previousIndex];
 
-          const currentMarkIndex = marks.indexOf(currentValue);
+          if (previous !== undefined) {
 
-          if (currentMarkIndex < marks.length - 1) {
-            this.setState({
-              currentValue: marks[currentMarkIndex + 1],
-              previousMouseX: mouseX,
-            });
+            const previousPos = this.marksRef[previousIndex].current.getBoundingClientRect();
+
+            const previousDelta = Math.abs(previousPos.right - mouseX);
+            const currentDelta = Math.abs(currentPos.left - mouseX);
+
+            if (previousDelta < currentDelta) {
+              this.setState({
+                currentIndex: previousIndex,
+                previousMouseX: mouseX,
+              })
+            }
+
           }
 
-        } else if (diffLeft < diffRight && mouseX < thumbRect.left - threshold && mouseX < previousMouseX) {
+        } else if (mouseX > previousMouseX) {
 
-          const currentMarkIndex = marks.indexOf(currentValue);
+          const nextIndex = currentIndex + 1;
 
-          if (currentMarkIndex >= 1) {
-            this.setState({
-              currentValue: marks[currentMarkIndex - 1],
-              previousMouseX: mouseX,
-            });
+          const next = this.state.marks[nextIndex];
+
+          if (next !== undefined) {
+
+            const nextPos = this.marksRef[nextIndex].current.getBoundingClientRect();
+
+            const nextDelta = Math.abs(nextPos.left - mouseX);
+            const currentDelta = Math.abs(currentPos.right - mouseX);
+
+            if (nextDelta < currentDelta) {
+              this.setState({
+                currentIndex: nextIndex,
+                previousMouseX: mouseX,
+              })
+            }
           }
-        }
-        else {
-          this.setState({ previousMouseX: e.pageX });
+
         }
       }
     };
@@ -65,12 +85,6 @@ class Slider extends React.Component {
         this.setState({ isMoving: false });
       }
     }, false);
-
-    // @todo
-    this.setState({
-      maxValue: Math.max(...this.props.marks),
-      minValue: Math.min(...this.props.marks),
-    })
   }
 
   handleOnPointerDown = (e) => {
@@ -83,18 +97,32 @@ class Slider extends React.Component {
     })
   }
 
-  render() {
-    const marks = this.props.marks.map((mark) => 
-      <SliderMark key={mark.toString()}
-                  value={mark}
-                  current={this.state.currentValue}
-                  max={this.state.maxValue}
-                  handleClick={this.handleOnMarkClick} />
+  renderMark(mark, index) {
+    const currentValue = this.state.marks[this.state.currentIndex];
+    
+    const style = {
+      left: (mark / this.state.maxValue) * 100 + '%',
+      backgroundColor: mark < currentValue ? '#F08981' : '#F6BDB7',
+    };
+  
+    return (
+      <div className="Slider-Mark"
+           key={mark.toString()}
+           style={style}
+           ref={this.marksRef[index]}
+      ></div>
     );
+  }
+
+  render() {
+    const marks = this.state.marks.map((mark, index) => this.renderMark(mark, index));
+
+    const currentValue = this.state.marks[this.state.currentIndex];
 
     const trackPosition = {
-      width: (this.state.currentValue / this.state.maxValue) * 100 + '%',
+      width: (currentValue / this.state.maxValue) * 100 + '%',
     }
+
 
     return (
       <div className="Slider">
@@ -102,7 +130,7 @@ class Slider extends React.Component {
         {marks}
         <SliderThumb thumbRef={this.thumbRef}
                      handleOnPointerDown={this.handleOnPointerDown}
-                     current={this.state.currentValue}
+                     current={currentValue}
                      max={this.state.maxValue}
         />
       </div>
