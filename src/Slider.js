@@ -8,20 +8,20 @@ class Slider extends React.Component {
 
     this.state = {
       isMoving: false,
-      currentValue: 1,
       currentIndex: 1,
       previousMouseX: 0,
-      marks: [0, 10, 20, 30, 40, 50, 100],
-      maxValue: 100,
-      minValue: 0,
     };
-
-    this.marksRef = this.state.marks.map(() => React.createRef());
-
+    this.marksRef = [];
     this.thumbRef = React.createRef();
   }
 
   componentDidMount() {
+    this.marksRef = this.props.marks.map(() => React.createRef());
+
+    this.setState({
+      currentIndex: this.props.marks.indexOf(this.props.defaultValue)
+    })
+
     const onPointerMove = (e) => {
       if (this.state.isMoving) {
         const mouseX = e.pageX;
@@ -36,7 +36,7 @@ class Slider extends React.Component {
 
           const previousIndex = currentIndex - 1;
 
-          const previous = this.state.marks[previousIndex];
+          const previous = this.props.marks[previousIndex];
 
           if (previous !== undefined) {
 
@@ -58,7 +58,7 @@ class Slider extends React.Component {
 
           const nextIndex = currentIndex + 1;
 
-          const next = this.state.marks[nextIndex];
+          const next = this.props.marks[nextIndex];
 
           if (next !== undefined) {
 
@@ -97,11 +97,9 @@ class Slider extends React.Component {
     })
   }
 
-  renderMark(mark, index) {
-    const currentValue = this.state.marks[this.state.currentIndex];
-    
+  renderMark(mark, index, currentValue, maxValue) {
     const style = {
-      left: (mark / this.state.maxValue) * 100 + '%',
+      left: (mark / maxValue) * 100 + '%',
       backgroundColor: mark < currentValue ? '#F08981' : '#F6BDB7',
     };
   
@@ -115,12 +113,13 @@ class Slider extends React.Component {
   }
 
   render() {
-    const marks = this.state.marks.map((mark, index) => this.renderMark(mark, index));
+    const currentValue = this.props.marks[this.state.currentIndex];
+    const maxValue = Math.max(...this.props.marks);
 
-    const currentValue = this.state.marks[this.state.currentIndex];
+    const marks = this.props.marks.map((mark, index) => this.renderMark(mark, index, currentValue, maxValue));
 
     const trackPosition = {
-      width: (currentValue / this.state.maxValue) * 100 + '%',
+      width: (currentValue / maxValue) * 100 + '%',
     }
 
 
@@ -131,7 +130,7 @@ class Slider extends React.Component {
         <SliderThumb thumbRef={this.thumbRef}
                      handleOnPointerDown={this.handleOnPointerDown}
                      current={currentValue}
-                     max={this.state.maxValue}
+                     max={maxValue}
         />
       </div>
     );
