@@ -97,10 +97,10 @@ class Slider extends React.Component {
     })
   }
 
-  renderMark(mark, index, currentValue, maxValue) {
+  renderMark(mark, index, currentValue, minValue, maxValue) {
     const style = {
-      left: (mark / maxValue) * 100 + '%',
-      backgroundColor: mark < currentValue ? '#F08981' : '#F6BDB7',
+      left: ((mark - minValue) * 100) / (maxValue - minValue) + '%',
+      backgroundColor: Math.abs(mark) < Math.abs(currentValue) ? '#F08981' : '#F6BDB7',
     };
   
     return (
@@ -115,14 +115,14 @@ class Slider extends React.Component {
 
   render() {
     const currentValue = this.props.marks[this.state.currentIndex];
-    const maxValue = Math.max(...this.props.marks);
+    const maxValue = this.props.marks[this.props.marks.length - 1];
+    const minValue = this.props.marks[0];
 
-    const marks = this.props.marks.map((mark, index) => this.renderMark(mark, index, currentValue, maxValue));
+    const marks = this.props.marks.map((mark, index) => this.renderMark(mark, index, currentValue, minValue, maxValue));
 
     const trackPosition = {
-      width: (currentValue / maxValue) * 100 + '%',
+      width: ((currentValue - minValue) * 100) / (maxValue - minValue) + '%',
     }
-
 
     return (
       <div className="Slider">
@@ -132,6 +132,7 @@ class Slider extends React.Component {
                      handleOnPointerDown={this.handleOnPointerDown}
                      current={currentValue}
                      max={maxValue}
+                     min={minValue}
         />
       </div>
     );

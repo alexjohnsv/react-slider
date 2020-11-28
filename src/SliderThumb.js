@@ -3,7 +3,7 @@ import React from 'react';
 function SliderThumb(props) {
 
   const style = {
-    left: 'calc(' + (props.current / props.max) * 100 + '% - 10px)',
+    left: 'calc(' + ((props.current - props.min) * 100) / (props.max - props.min) + '% - 10px)',
   };
 
   return (
